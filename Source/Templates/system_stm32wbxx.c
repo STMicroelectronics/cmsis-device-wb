@@ -127,7 +127,7 @@
 /* Note: Following vector table addresses must be defined in line with linker
          configuration. */
 /*!< Uncomment the following line if you need to relocate CPU1 CM4 and/or CPU2
-     CM0+ vector table anywhere in Sram or Flash. Else vector table will be kept
+     CM0+ vector table anywhere in SRAM or Flash. Else vector table will be kept
      at address 0x00 which correspond to automatic remap of boot address selected */
 /* #define USER_VECT_TAB_ADDRESS */
 #if defined(USER_VECT_TAB_ADDRESS)
@@ -217,9 +217,11 @@ const uint32_t SmpsPrescalerTable[4UL][6UL] = {{1UL, 3UL, 2UL, 2UL, 1UL, 2UL}, \
   */
 void SystemInit(void)
 {
+  /* Configure the Vector Table location -------------------------------------*/
 #if defined(USER_VECT_TAB_ADDRESS)
-  /* Configure the Vector Table location add offset address ------------------*/
-  SCB->VTOR = VECT_TAB_BASE_ADDRESS | VECT_TAB_OFFSET;
+  SCB->VTOR = VECT_TAB_BASE_ADDRESS | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal Flash or SRAM */
+#else
+  SCB->VTOR = FLASH_BASE; /* Default Vector Table Location at the base address of Internal Flash */
 #endif /* USER_VECT_TAB_ADDRESS */
 
   /* FPU settings ------------------------------------------------------------*/
